@@ -30,11 +30,7 @@ fn main() -> Result<()> {
     let opts = PackMeHarder::parse();
     let mut reader = Reader::from_path(opts.csv).unwrap();
     let medicine: Vec<Medicine> = reader.deserialize().collect::<Result<Vec<Medicine>, _>>()?;
-    let mut suitcases = Vec::new();
-    suitcases.push(Suitcase {
-        weight: opts.suitcase_weight,
-        medicines: Vec::new(),
-    });
+    let mut suitcases: Vec<Suitcase> = Vec::new();
 
     for med in medicine.iter() {
         for _ in 0..med.quantity {
@@ -78,9 +74,12 @@ fn main() -> Result<()> {
     for (i, suitcase) in suitcases.iter().enumerate() {
         println!("Suitcase {}", i + 1);
         for med in suitcase.medicines.iter() {
-            println!("{} x {}", med.quantity, med.medication);
+            println!(
+                "{} x {} (total weight {:.2})",
+                med.quantity, med.medication, med.weight
+            );
         }
-        println!("Total weight: {}", suitcase.weight);
+        println!("Total weight: {:.2}", suitcase.weight);
         println!();
     }
 
